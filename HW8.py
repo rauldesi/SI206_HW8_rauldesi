@@ -1,7 +1,7 @@
-# Your name: 
-# Your student id:
-# Your email:
-# List who you have worked with on this homework:
+# Your name: Raul Desiderio
+# Your student id: 8216 9902
+# Your email: rauldesi
+# List who you have worked with on this homework: n/a
 
 import matplotlib.pyplot as plt
 import os
