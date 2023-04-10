@@ -46,7 +46,7 @@ def plot_rest_categories(db):
     conn = sqlite3.connect(path+'/'+db)
     cur = conn.cursor()
 
-    output = {}
+    data = {}
 
     cat_data = cur.execute("SELECT c.category, count(*) FROM categories c " +
                            "JOIN restaurants r ON r.category_id = c.id " +
@@ -55,11 +55,32 @@ def plot_rest_categories(db):
     for cat in cat_data:
         key = cat[0]
         val = cat[1]
-        output[key] = val
+        data[key] = val
 
     conn.close()
 
-    return output
+    sorted_data = sorted(data.items(), key=lambda x:x[1])
+
+    categories = []
+    counts = []
+
+    for cat in sorted_data:
+        categories.append(cat[0])
+        counts.append(cat[1])
+
+    fig = plt.figure(figsize = (6.5, 5))
+
+    plt.barh(categories, counts)
+    plt.xticks([1,2,3,4])
+    plt.xlabel("Number of Restaurants")
+    plt.ylabel("Restaurant Categories")
+    plt.title("Types of Restaurant on South University Ave")
+
+    plt.tight_layout()
+    plt.show()
+    plt.savefig('HW8 barh.png')
+
+    return data
 
 def find_rest_in_building(building_num, db):
     '''
