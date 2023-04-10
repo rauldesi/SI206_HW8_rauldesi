@@ -77,7 +77,7 @@ def plot_rest_categories(db):
     plt.title("Types of Restaurant on South University Ave")
 
     plt.tight_layout()
-    plt.show()
+
     plt.savefig('HW8 barh.png')
 
     return data
@@ -119,7 +119,60 @@ def get_highest_rating(db): #Do this through DB as well
     The second bar chart displays the buildings along the y-axis and their ratings along the x-axis 
     in descending order (by rating).
     """
-    pass
+    
+    path = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(path+'/'+db)
+    cur = conn.cursor()
+
+    best_cat = cur.execute("SELECT c.category, avg(r.rating) as avg_rating FROM categories c " +
+                           "JOIN restaurants r ON r.category_id = c.id " +
+                           "GROUP BY c.category ORDER BY avg_rating DESC").fetchall()
+    
+    cats = []
+    cats_r = []
+
+    for cat in best_cat:
+        cats.append(cat[0])
+        cats_r.append(cat[1])
+
+    cats.reverse()
+    cats_r.reverse()
+
+    best_bld = cur.execute("SELECT b.building, avg(r.rating) as avg_rating FROM buildings b " +
+                           "JOIN restaurants r ON r.building_id = b.id " +
+                           "GROUP BY b.building ORDER BY avg_rating DESC").fetchall()
+    
+    blds = []
+    blds_r = []
+
+    for bld in best_bld:
+        blds.append(str(bld[0]))
+        blds_r.append(bld[1])
+
+    blds.reverse()
+    blds_r.reverse()
+
+    output = [ best_cat[0], best_bld[0] ]
+
+    fig, (ax1, ax2) = plt.subplots(2,figsize = (8, 8))
+
+    ax1.barh(cats, cats_r)
+    ax1.set_xlabel('Ratings')
+    ax1.set_xticks([0,1,2,3,4,5])
+    ax1.set_ylabel('Categories')
+    ax1.set_title('Average Restaurant Ratings by Category')
+
+    ax2.barh(blds, blds_r)
+    ax2.set_xlabel('Ratings')
+    ax2.set_xticks([0,1,2,3,4,5])
+    ax2.set_ylabel('Buildings')
+    ax2.set_title('Average Restaurant Ratings by Building')
+
+    fig.tight_layout()
+    
+    plt.savefig('Extra Credit.png')
+
+    return output
 
 #Try calling your functions here
 def main():
