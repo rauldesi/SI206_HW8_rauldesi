@@ -31,6 +31,8 @@ def load_rest_data(db):
         val = {'category': rest[1], 'building': rest[2], 'rating': rest[3]}
         output[key] = val
 
+    conn.close()
+
     return output
 
 def plot_rest_categories(db):
@@ -55,6 +57,8 @@ def plot_rest_categories(db):
         val = cat[1]
         output[key] = val
 
+    conn.close()
+
     return output
 
 def find_rest_in_building(building_num, db):
@@ -63,7 +67,24 @@ def find_rest_in_building(building_num, db):
     restaurant names. You need to find all the restaurant names which are in the specific building. The restaurants 
     should be sorted by their rating from highest to lowest.
     '''
-    pass
+    
+    path = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(path+'/'+db)
+    cur = conn.cursor()
+
+    output = []
+
+    build_data = cur.execute("SELECT r.name, r.rating FROM restaurants r " +
+                             "JOIN buildings b ON r.building_id = b.id " +
+                             "WHERE b.building = ? " + 
+                             "ORDER BY r.rating DESC", (building_num, )).fetchall()
+    
+    for building in build_data:
+        output.append(building[0])
+
+    conn.close()
+
+    return output
 
 #EXTRA CREDIT
 def get_highest_rating(db): #Do this through DB as well
