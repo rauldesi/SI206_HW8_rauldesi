@@ -78,7 +78,7 @@ def plot_rest_categories(db):
 
     plt.tight_layout()
 
-    plt.savefig('HW8 barh.png')
+    plt.savefig('HW8 South U Restaurant Types Graph.png')
 
     return data
 
@@ -170,7 +170,7 @@ def get_highest_rating(db): #Do this through DB as well
 
     fig.tight_layout()
     
-    plt.savefig('Extra Credit.png')
+    plt.savefig('HW8 Extra Credit Graphs.png')
 
     return output
 
